@@ -1,0 +1,30 @@
+# docker-compose file to start up traefik as a local service
+# to start the container run:
+#    docker-compose up -d
+#
+# Note: Bind mounts for config file, acme ssl certs, etc
+#
+# Note2: docker container name is sourced from the .env file in this directory.
+#
+# Note3: containrrr/watchtower service will auto update this container
+
+
+version: "2.4"
+
+services:
+  traefik-forward-auth:
+    image: traefik:latest
+    container_name: traefik.localhost
+    restart: always
+
+    mem_limit: 512M
+
+    volumes:
+      - ./:/opt/traefik
+      - ./:/etc/traefik
+      - /var/log/traefik:/var/log/traefik
+
+    network_mode: host
+
+    labels:
+      - com.centurylinklabs.watchtower.enable=true

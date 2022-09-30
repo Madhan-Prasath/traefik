@@ -1,0 +1,26 @@
+# Traefik v2 dynamic config fragment to expose traefik-forward-auth
+# Filename: /opt/traefik/conf.d/20-auth.bitsathy.ac.in.yaml
+# URL: https://auth.bitsathy.ac.in
+
+http:
+  services:
+    google-oauth2:
+      loadBalancer:
+        servers:
+          - url: http://localhost:4181
+
+  middlewares:
+    google-oauth2:
+      forwardAuth:
+        address: "http://localhost:4181"
+
+  routers:
+    google-oauth2:
+      rule: Host(`domain name`)
+      entrypoints:
+        - https
+      middlewares:
+        - google-oauth2
+      service: google-oauth2
+      tls:
+        certResolver: lets-encrypt
